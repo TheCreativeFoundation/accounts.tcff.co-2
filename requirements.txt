@@ -1,6 +1,5 @@
 flask
-requests
 firebase-admin
-flask-cors
 boto3
 python-dotenv
+sendgrid
