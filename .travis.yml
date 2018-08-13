@@ -12,8 +12,8 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   skip_cleanup: true
   region: "us-east-2"  
-  app: "accounts.tcff.co"
-  env: "Accountstcffco-env-1"
+  app: "tcf-accountsapp"
+  env: "tcf-accountsapp"
   bucket_name: "tcf-accounts-application"
 
 notifications:
