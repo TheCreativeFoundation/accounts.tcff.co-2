@@ -1,0 +1,24 @@
+language: python
+python: 
+  - 3.6
+install:
+  - pip install -r requirements.txt
+script:
+  - python test.py
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  skip_cleanup: true
+  region: "us-east-2"  
+  app: "accounts.tcff.co"
+  env: "Accountstcffco-env-1"
+  bucket_name: "tcf-accounts-application"
+
+notifications:
+  email:
+    - armaangupta01@gmail.com
+  slack: thecreativefoundation:n3PZ4D7QrW3uXjH7QdBH5exQ
+  on_failure: always
+  on_success: always
