@@ -4,4 +4,3 @@ firebase-admin
 flask-cors
 boto3
 python-dotenv
-sendgrid==5.4.1

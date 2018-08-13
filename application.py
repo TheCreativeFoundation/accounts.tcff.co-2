@@ -3,10 +3,10 @@ import boto3
 import json
 import sys
 import firebase_admin
-import sendgrid
-import time
-from sendgrid.helpers.mail import Email, Substitution, Mail, Personalization
-from python_http_client import exceptions
+# import sendgrid
+# import time
+# from sendgrid.helpers.mail import Email, Substitution, Mail, Personalization
+# from python_http_client import exceptions
 from firebase_admin import credentials, auth, firestore
 from flask import Flask, render_template, request, redirect, jsonify
 from dotenv import load_dotenv
@@ -38,7 +38,7 @@ except Exception as e:
 
 db = firestore.client()
 
-sg = sendgrid.SendGridAPIClient(apikey=os.getenv("SENDGRID_API_KEY"))
+# sg = sendgrid.SendGridAPIClient(apikey=os.getenv("SENDGRID_API_KEY"))
 
 # ------------ API EXTENSION ------------ #
 
@@ -258,46 +258,49 @@ def create_user_token():
                                 }
                             )
 
-
 @application.route("/email/<email_type>", methods=["POST"])
-def email(email_type: str):
-    token = request.form.get("token")
-    if not token:
-        return jsonify({"statusCode": 407, "message": "token missing"})
-    try:
-        decoded_token: dict = auth.verify_id_token(token)
-    except Exception as e:
-        return jsonify({"statusCode": 505, "message": "Exception" + str(e)})
-    else:
-        try:
-            personalization = Personalization()
-            personalization.add_to(Email(decoded_token.get("email")))
-            mail = Mail()
-            mail.from_email = Email("jojo@tcff.co")
-            mail.subject = "I'm replacing the subject tag"
-            mail.add_personalization(personalization)
-            if email_type == "newuser":
-                mail.template_id = "d-26b95c7042cc4294bc5c8df58f07de56"
-            elif email_type == "passwordreset":
-                mail.template_id = "d-6710abfa23f541f988ee3063f146ccf9"
-            elif email_type == "onconfirm":
-                mail.template_id = "d-81dadc44b09d44e4a577b1dd2127a0a6"
-            else:
-                return jsonify({"statusCode": 404, "message": "email type not found"})
-        except Exception as e:
-            return jsonify({"statusCode": 505, "message": "Exception" + str(e)})
-        else:
-            try:
-                sg.client.mail.send.post(request_body=mail.get())
-            except exceptions.BadRequestsError as e:
-                return jsonify(
-                    {
-                        "statusCode": 505,
-                        "message": "couldnt send email => Exception" + str(e),
-                    }
-                )
-            else:
-                return jsonify({"statusCode": 202, "message": "email sent correctly"})
+def email(email_type):
+    return jsonify({"statusCode": 202, "message": "email sent correctly"})
+
+# @application.route("/email/<email_type>", methods=["POST"])
+# def email(email_type: str):
+#     token = request.form.get("token")
+#     if not token:
+#         return jsonify({"statusCode": 407, "message": "token missing"})
+#     try:
+#         decoded_token: dict = auth.verify_id_token(token)
+#     except Exception as e:
+#         return jsonify({"statusCode": 505, "message": "Exception" + str(e)})
+#     else:
+#         try:
+#             personalization = Personalization()
+#             personalization.add_to(Email(decoded_token.get("email")))
+#             mail = Mail()
+#             mail.from_email = Email("jojo@tcff.co")
+#             mail.subject = "I'm replacing the subject tag"
+#             mail.add_personalization(personalization)
+#             if email_type == "newuser":
+#                 mail.template_id = "d-26b95c7042cc4294bc5c8df58f07de56"
+#             elif email_type == "passwordreset":
+#                 mail.template_id = "d-6710abfa23f541f988ee3063f146ccf9"
+#             elif email_type == "onconfirm":
+#                 mail.template_id = "d-81dadc44b09d44e4a577b1dd2127a0a6"
+#             else:
+#                 return jsonify({"statusCode": 404, "message": "email type not found"})
+#         except Exception as e:
+#             return jsonify({"statusCode": 505, "message": "Exception" + str(e)})
+#         else:
+#             try:
+#                 sg.client.mail.send.post(request_body=mail.get())
+#             except exceptions.BadRequestsError as e:
+#                 return jsonify(
+#                     {
+#                         "statusCode": 505,
+#                         "message": "couldnt send email => Exception" + str(e),
+#                     }
+#                 )
+#             else:
+#                 return jsonify({"statusCode": 202, "message": "email sent correctly"})
 
 
 if __name__ == "__main__":
