@@ -13,7 +13,7 @@ deploy:
   skip_cleanup: true
   region: "us-east-2"
   app: "accounts.tcff.co"
-  env: "tcf-accounts-main"
+  env: "tcf-accounts-env-main"
   bucket_name: "tcf-accounts-application"
 
 notifications:
